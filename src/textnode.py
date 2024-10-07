@@ -1,5 +1,12 @@
 from htmlnode import LeafNode
 
+text_type_text = "text"
+text_type_bold = "bold"
+text_type_italic = "italic"
+text_type_code = "code"
+text_type_link = "link"
+text_type_image = "image"
+
 class TextNode():
     
     def __init__(self, text, text_type, url=None):
@@ -20,17 +27,17 @@ class TextNode():
 
 
 def text_node_to_html_node(TextNode):
-    if TextNode.text_type == "text_type_text":
+    if TextNode.text_type == text_type_text:
         return LeafNode(None, TextNode.text)
-    if TextNode.text_type == "text_type_bold":
+    if TextNode.text_type == text_type_bold:
         return LeafNode("b", TextNode.text)
-    if TextNode.text_type == "text_type_italic":
+    if TextNode.text_type == text_type_italic:
         return LeafNode("i", TextNode.text)
-    if TextNode.text_type == "text_type_code":
+    if TextNode.text_type == text_type_code:
         return LeafNode("code", TextNode.text)
-    if TextNode.text_type == "text_type_link":
+    if TextNode.text_type == text_type_link:
         return LeafNode("a", TextNode.text, {"href": TextNode.url})
-    if TextNode.text_type == "text_type_image":
+    if TextNode.text_type == text_type_image:
         return LeafNode("img", "", {"src": TextNode.url, "alt": TextNode.text})
     raise Exception("Invalid text type")
 

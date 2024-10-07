@@ -65,3 +65,7 @@ class TestParentNode(unittest.TestCase):
         childnode = ParentNode("i", [grandnode])
         node = ParentNode("h3", [childnode])
         self.assertEqual(node.to_html(), '<h3><i><span>grandchild</span></i></h3>')
+
+
+if __name__ == "__main__":
+    unittest.main()

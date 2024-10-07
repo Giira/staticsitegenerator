@@ -1,5 +1,6 @@
 import unittest
-from textnode import TextNode, text_node_to_html_node
+from textnode import (TextNode, text_node_to_html_node, text_type_text, text_type_bold, 
+                      text_type_italic, text_type_code, text_type_link, text_type_image)
 from htmlnode import LeafNode
 
 
@@ -34,32 +35,32 @@ class TestTextNode(unittest.TestCase):
 
 
     def test_to_html_text(self):
-        node = TextNode("hello", "text_type_text")
+        node = TextNode("hello", text_type_text)
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode(None, "hello")))
 
     
     def test_to_html_bold(self):
-        node = TextNode("hello", "text_type_bold")
+        node = TextNode("hello", text_type_bold)
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode("b", "hello")))
 
     
     def test_to_html_italic(self):
-        node = TextNode("hello", "text_type_italic")
+        node = TextNode("hello", text_type_italic)
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode("i", "hello")))
 
     
     def test_to_html_code(self):
-        node = TextNode("hello", "text_type_code")
+        node = TextNode("hello", text_type_code)
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode("code", "hello")))
 
 
     def test_to_html_link(self):
-        node = TextNode("hello", "text_type_link", "www.google.com")
+        node = TextNode("hello", text_type_link, "www.google.com")
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode("a", "hello", {"href": "www.google.com"})))
 
     
     def test_to_html_italic(self):
-        node = TextNode("hello", "text_type_image", "www.google.com")
+        node = TextNode("hello", text_type_image, "www.google.com")
         self.assertEqual(repr(text_node_to_html_node(node)), repr(LeafNode("img", "", {"src": "www.google.com", "alt": "hello"})))
 
 
