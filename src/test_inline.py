@@ -1,7 +1,8 @@
 import unittest
-from textnode import (TextNode, text_type_text, text_type_bold, 
-                      text_type_italic, text_type_code )
-from inline import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from textnode import (TextNode, text_type_text, text_type_bold, text_type_link, 
+                      text_type_italic, text_type_code, text_type_image)
+from inline import (split_nodes_delimiter, extract_markdown_images, extract_markdown_links, 
+                    split_nodes_image, split_nodes_link)
 
 class TestSplitNodesDelimiter(unittest.TestCase):
     def test_eq(self):
@@ -76,3 +77,59 @@ class TestExtractMarkdown(unittest.TestCase):
         text = "This is text ![img text](img src) and so is this [link text](link address)"
         self.assertEqual(extract_markdown_links(text), 
                          [("link text", "link address")])
+        
+
+class TestSplitImages(unittest.TestCase):
+    def test_split_image_eq(self):
+        text = "This is an image: ![img](www.img), see!"
+        node = TextNode(text, text_type_text)
+        self.assertEqual(split_nodes_image([node]), [
+            TextNode("This is an image: ", text_type_text),
+            TextNode("img", text_type_image, "www.img"),
+            TextNode(", see!", text_type_text)
+        ])
+
+    def test_two_imgs_eq(self):
+        text = "This is an image: ![img](www.img), and this: ![img2](www.img2)"
+        node = TextNode(text, text_type_text)
+        self.assertEqual(split_nodes_image([node]), [
+            TextNode("This is an image: ", text_type_text),
+            TextNode("img", text_type_image, "www.img"),
+            TextNode(", and this: ", text_type_text),
+            TextNode("img2", text_type_image, "www.img2"),
+        ])
+    
+    def test_no_text(self):
+        text = "![img](www.img)![img2](www.img2)"
+        node = TextNode(text, text_type_text)
+        self.assertEqual(split_nodes_image([node]), [
+            TextNode("img", text_type_image, "www.img"),
+            TextNode("img2", text_type_image, "www.img2")
+        ])
+
+    def test_two_nodes(self):
+        text = "This is an image: ![img](www.img), see!"
+        node = TextNode(text, text_type_text)
+        self.assertEqual(split_nodes_image([node, node]), [
+            TextNode("This is an image: ", text_type_text),
+            TextNode("img", text_type_image, "www.img"),
+            TextNode(", see!", text_type_text),
+            TextNode("This is an image: ", text_type_text),
+            TextNode("img", text_type_image, "www.img"),
+            TextNode(", see!", text_type_text)
+        ])
+
+    def test_no_images(self):
+        node = TextNode("Hey you!", text_type_text)
+        self.assertEqual(split_nodes_image([node]), [TextNode("Hey you!", text_type_text)])
+
+
+class TestSplitLinks(unittest.TestCase):
+    def test_split_link_eq(self):
+        text = "This is a link: [link](www.link), this isn't: ![img](img)"
+        node = TextNode(text, text_type_text)
+        self.assertEqual(split_nodes_link([node]), [
+            TextNode("This is a link: ", text_type_text),
+            TextNode("link", text_type_link, "www.link"),
+            TextNode(", this isn't: ![img](img)", text_type_text)
+        ])
