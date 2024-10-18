@@ -1,3 +1,5 @@
+from htmlnode import HTMLNode
+
 def markdown_to_blocks(markdown):
     text_list = [item.strip() for item in markdown.split("\n\n")]
     output_list = []
@@ -43,3 +45,37 @@ def block_to_block_type(block):
         return "ordered_list"
     else:
         return "paragraph"
+    
+
+def block_type_to_tag(block_type, block):
+    if block_type == "paragraph":
+        return "p"
+    if block_type == "heading":
+        hash_count = 0
+        for character in block:
+            if character == "#":
+                hash_count += 1
+            else:
+                return f"h{hash_count}"
+    if block_type == "code":
+        return "code"
+    if block_type == "quote":
+        return "q"
+    if block_type == "unordered_list":
+        return "ul"
+    if block_type == "ordered_list":
+        return "ol"
+    else:
+        raise ValueError(f"'{block_type}' is an invalid block type")
+    
+    
+    
+
+def markdown_to_html_node(markdown):
+    children = []
+    typed_blocks = []
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        typed_blocks.append((block, block_to_block_type(block)))
+
+    return HTMLNode("div", None, children)
