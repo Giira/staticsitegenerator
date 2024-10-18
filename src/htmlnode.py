@@ -18,6 +18,13 @@ class HTMLNode():
             for item in list(self.props.items()):
                 html_string += f' {item[0]}="{item[1]}"'
             return html_string
+        
+
+    def __eq__(self, HTMLNode):
+        if self.tag == HTMLNode.tag and self.value == HTMLNode.value and self.children == HTMLNode.children and self.props == HTMLNode.props:
+            return True
+        else:
+            return False
     
 
     def __repr__(self):

@@ -1,5 +1,6 @@
 import unittest
-from markdownblocks import markdown_to_blocks, block_to_block_type
+from htmlnode import ParentNode, LeafNode
+from markdownblocks import markdown_to_blocks, block_to_block_type, block_type_to_tag, lists_to_children
 
 class TestMarkdownToBlocks(unittest.TestCase):
     def test_eq(self):
@@ -99,3 +100,36 @@ class TestBlockToBlockType(unittest.TestCase):
     def test_eq_ordered_list2(self):
         block = "1. line\n2. line\n3.line"
         self.assertEqual(block_to_block_type(block), "paragraph")
+
+    def test_block_to_tag(self):
+        block = "### block"
+        self.assertEqual(block_type_to_tag("heading", block), "h3")
+
+
+class TestListsToChildren(unittest.TestCase):
+    def test_eq(self):
+        list = "1. line1\n2. line2\n3. line3"
+        block_type = "ordered_list"
+        self.assertEqual(lists_to_children(list, block_type), [
+            ParentNode("li", [LeafNode(None, "line1")]),
+            ParentNode("li", [LeafNode(None, "line2")]),
+            ParentNode("li", [LeafNode(None, "line3")])
+            ])
+        
+    def test_eq_2(self):
+        list = "1. **line1**\n2. line2\n3. line3"
+        block_type = "ordered_list"
+        self.assertEqual(lists_to_children(list, block_type), [
+            ParentNode("li", [LeafNode("b", "line1")]),
+            ParentNode("li", [LeafNode(None, "line2")]),
+            ParentNode("li", [LeafNode(None, "line3")])
+            ])
+        
+    def test_eq_3(self):
+        list = "1. **line1** secret text\n2. line2\n3. line3"
+        block_type = "ordered_list"
+        self.assertEqual(lists_to_children(list, block_type), [
+            ParentNode("li", [LeafNode("b", "line1"), LeafNode(None, " secret text")]),
+            ParentNode("li", [LeafNode(None, "line2")]),
+            ParentNode("li", [LeafNode(None, "line3")])
+            ])
