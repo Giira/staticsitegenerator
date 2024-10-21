@@ -1,6 +1,7 @@
 import unittest
 from htmlnode import ParentNode, LeafNode
-from markdownblocks import markdown_to_blocks, block_to_block_type, block_type_to_tag, lists_to_children
+from markdownblocks import (markdown_to_blocks, block_to_block_type, block_type_to_tag, 
+                            lists_to_children, typed_parent_node, markdown_to_html_node)
 
 class TestMarkdownToBlocks(unittest.TestCase):
     def test_eq(self):
@@ -133,3 +134,46 @@ class TestListsToChildren(unittest.TestCase):
             ParentNode("li", [LeafNode(None, "line2")]),
             ParentNode("li", [LeafNode(None, "line3")])
             ])
+
+
+class TestTypedParentNode(unittest.TestCase):
+    def test_eq(self):
+        block = "some **text** and `code`"
+        typed_block = (block, "paragraph")
+        self.assertEqual(typed_parent_node(typed_block), ParentNode("p", [
+            LeafNode(None, "some "),
+            LeafNode("b", "text"),
+            LeafNode(None, " and "),
+            LeafNode("code", "code")
+        ]))
+
+
+class TestMarkdownToHTMLNode(unittest.TestCase):
+    def test_eq(self):
+        markdown = """# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another **list** item"""
+
+        self.assertEqual(markdown_to_html_node(markdown), ParentNode("div", [
+            ParentNode("h1", [LeafNode(None, "This is a heading")]),
+            ParentNode("p", [
+                LeafNode(None, "This is a paragraph of text. It has some "),
+                LeafNode("b", "bold"),
+                LeafNode(None, " and "),
+                LeafNode("i", "italic"),
+                LeafNode(None, " words inside of it.")
+            ]),
+            ParentNode("ul", [
+                ParentNode("li", [LeafNode(None, "This is the first list item in a list block")]),
+                ParentNode("li", [LeafNode(None, "This is a list item")]),
+                ParentNode("li", [
+                    LeafNode(None, "This is another "),
+                    LeafNode("b", "list"),
+                    LeafNode(None, " item")
+                ])
+            ])
+        ]))

@@ -107,22 +107,34 @@ def lists_to_children(text, block_type):
 
 
 def typed_parent_node(typed_block):
-    tag = block_type_to_tag(typed_block[1])
+    tag = block_type_to_tag(typed_block[1], typed_block[0])
     
+    if tag == "p":
+        text = typed_block[0]
+        children = text_to_children(text)
+    elif tag[0] == "h":
+        text = typed_block[0][int(tag[1]) + 1:]
+        children = text_to_children(text)
+    elif tag == "code":
+        text = typed_block[0][3:]
+        children = text_to_children(text)
+    elif tag == "q":
+        text = typed_block[0].lstrip(">")
+        children = text_to_children(text)
+    else:
+        children = lists_to_children(typed_block[0], typed_block[1])
+
+    return ParentNode(tag, children)
+
     
-
-
 def markdown_to_html_node(markdown):
     children = []
     typed_blocks = []
     blocks = markdown_to_blocks(markdown)
+    
     for block in blocks:
         typed_blocks.append((block, block_to_block_type(block)))
     for typed_block in typed_blocks:
-        ## strip block
-        ## turn to text nodes
-        ## put inside parentnode with correct tag
-        ## add to children
-        pass
+        children.append(typed_parent_node(typed_block))
 
     return ParentNode("div", children)
