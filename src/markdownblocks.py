@@ -62,7 +62,7 @@ def block_type_to_tag(block_type, block):
     if block_type == "code":
         return "code"
     if block_type == "quote":
-        return "q"
+        return "blockquote"
     if block_type == "unordered_list":
         return "ul"
     if block_type == "ordered_list":
@@ -118,7 +118,7 @@ def typed_parent_node(typed_block):
     elif tag == "code":
         text = typed_block[0][3:]
         children = text_to_children(text)
-    elif tag == "q":
+    elif tag == "blockquote":
         text = typed_block[0].lstrip(">")
         children = text_to_children(text)
     else:

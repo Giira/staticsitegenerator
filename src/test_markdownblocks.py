@@ -152,7 +152,7 @@ class TestMarkdownToHTMLNode(unittest.TestCase):
     def test_eq(self):
         markdown = """# This is a heading
 
-This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+>This is a paragraph of text. It has some **bold** and *italic* words inside of it.
 
 * This is the first list item in a list block
 * This is a list item
@@ -160,7 +160,7 @@ This is a paragraph of text. It has some **bold** and *italic* words inside of i
 
         self.assertEqual(markdown_to_html_node(markdown), ParentNode("div", [
             ParentNode("h1", [LeafNode(None, "This is a heading")]),
-            ParentNode("p", [
+            ParentNode("blockquote", [
                 LeafNode(None, "This is a paragraph of text. It has some "),
                 LeafNode("b", "bold"),
                 LeafNode(None, " and "),
