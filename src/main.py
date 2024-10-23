@@ -1,8 +1,8 @@
-from textnode import TextNode
-   
+import os
+import shutil
 
 def main():
-    text_node = TextNode("text", "bold", "http://localhost:8888")
+
 
 
 main()
