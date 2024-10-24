@@ -138,3 +138,11 @@ def markdown_to_html_node(markdown):
         children.append(typed_parent_node(typed_block))
 
     return ParentNode("div", children)
+
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block.startswith("# "):
+            return block.lstrip("# ")
+    raise Exception("No h1 header")

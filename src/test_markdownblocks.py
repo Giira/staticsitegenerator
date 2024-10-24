@@ -1,7 +1,7 @@
 import unittest
 from htmlnode import ParentNode, LeafNode
 from markdownblocks import (markdown_to_blocks, block_to_block_type, block_type_to_tag, 
-                            lists_to_children, typed_parent_node, markdown_to_html_node)
+                            lists_to_children, typed_parent_node, markdown_to_html_node, extract_title)
 
 class TestMarkdownToBlocks(unittest.TestCase):
     def test_eq(self):
@@ -177,3 +177,19 @@ class TestMarkdownToHTMLNode(unittest.TestCase):
                 ])
             ])
         ]))
+
+
+class TestExtractTitle(unittest.TestCase):
+    def test_eq(self):
+        markdown = "# Hello"
+        self.assertEqual(extract_title(markdown), "Hello")
+
+    def test_multiple_blocks(self):
+        markdown = """
+Hello World
+
+# Title bois
+
+paragraph
+"""
+        self.assertEqual(extract_title(markdown), "Title bois")
