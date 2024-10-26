@@ -1,6 +1,12 @@
 import os
 import shutil
-from copydirectory import copy_files, generate_page
+from copydirectory import copy_files, generate_page_recursive
+
+source = "./static"
+content = "./content"
+destination = "./public"
+template = "./template.html"
+
 
 def main():
     print("... Removing public directory ...")
@@ -8,8 +14,8 @@ def main():
         shutil.rmtree("./public")
     
     print("... Copying static to new public directory ...")
-    copy_files("./static", "./public")
+    copy_files(source, destination)
 
-    generate_page("content/index.md", "template.html", "public.index.html")
+    generate_page_recursive(content, template, destination)
 
 main()

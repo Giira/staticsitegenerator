@@ -97,7 +97,7 @@ def lists_to_children(text, block_type):
                     continue
 
     if block_type == "unordered_list":
-        lines = [line.lstrip("* ") for line in text.split("\n")]
+        lines = [line[2:] for line in text.split("\n")]
 
     children = []
     for line in lines:
@@ -119,7 +119,11 @@ def typed_parent_node(typed_block):
         text = typed_block[0][3:]
         children = text_to_children(text)
     elif tag == "blockquote":
-        text = typed_block[0].lstrip(">")
+        lines = typed_block[0].split("\n")
+        stripped_lines = []
+        for line in lines:
+            stripped_lines.append(line.lstrip(">").strip())
+        text = " ".join(stripped_lines)
         children = text_to_children(text)
     else:
         children = lists_to_children(typed_block[0], typed_block[1])
